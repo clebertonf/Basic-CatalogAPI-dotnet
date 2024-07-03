@@ -23,5 +23,7 @@ namespace CatalogAPI.Controllers
 
             return products;
         }
+
+
     }
 }
