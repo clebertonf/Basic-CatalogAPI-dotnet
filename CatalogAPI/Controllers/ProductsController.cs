@@ -1,5 +1,5 @@
 ﻿using CatalogAPI.Context;
-using Microsoft.AspNetCore.Http;
+using CatalogAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CatalogAPI.Controllers
@@ -13,6 +13,15 @@ namespace CatalogAPI.Controllers
         public ProductsController(AppDbContext appDbContext)
         {
             _appDbContext = appDbContext;
+        }
+
+        [HttpGet]
+        public ActionResult<IEnumerable<Product>> Get()
+        {
+            var products = _appDbContext.products.ToList();
+            if (products is null) return NotFound();
+
+            return products;
         }
     }
 }
