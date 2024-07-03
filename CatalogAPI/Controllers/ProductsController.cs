@@ -24,6 +24,13 @@ namespace CatalogAPI.Controllers
             return products;
         }
 
+        [HttpGet("{id:int}")]
+        public ActionResult<Product> Get(int id)
+        {
+            var product = _appDbContext.products.FirstOrDefault(p => p.ProductId.Equals(id));
+            if (product is null) return NotFound("Product not found!");
 
+            return product;
+        }
     }
 }
