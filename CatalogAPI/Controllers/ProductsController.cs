@@ -1,7 +1,6 @@
 ﻿using CatalogAPI.Context;
 using CatalogAPI.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace CatalogAPI.Controllers
 {
