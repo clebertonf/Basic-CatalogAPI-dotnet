@@ -20,7 +20,7 @@ namespace CatalogAPI.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(_appDbContext.categories.ToList());
+            return Ok(_appDbContext.categories.Take(10).AsNoTracking().ToList());
         }
 
         [HttpGet("/categories/products")]

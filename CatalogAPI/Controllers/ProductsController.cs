@@ -1,6 +1,7 @@
 ﻿using CatalogAPI.Context;
 using CatalogAPI.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CatalogAPI.Controllers
 {
@@ -18,10 +19,17 @@ namespace CatalogAPI.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Product>> Get()
         {
-            var products = _appDbContext.products.ToList();
-            if (products is null) return NotFound();
+            try
+            {
+                var products = _appDbContext.products.Take(10).AsNoTracking().ToList();
+                if (products is null) return NotFound();
 
-            return products;
+                return products;
+
+            } catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"This is a error! {ex.Message}"); // example
+            }
         }
 
         [HttpGet("{id:int}")]
