@@ -1,6 +1,7 @@
 ﻿using CatalogAPI.Context;
 using CatalogAPI.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 
 namespace CatalogAPI.Controllers
@@ -35,7 +36,7 @@ namespace CatalogAPI.Controllers
         }
 
         [HttpGet("{id:int:min(1)}")]
-        public async Task<ActionResult<Product>> GetByIdAsync(int id)
+        public async Task<ActionResult<Product>> GetByIdAsync(int id, [BindRequired] string name)
         {
             var product = await _appDbContext.products.FirstOrDefaultAsync(p => p.ProductId.Equals(id));
             if (product is null) return NotFound("Product not found!");
@@ -44,7 +45,7 @@ namespace CatalogAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> PostAsync([FromBody] Product product)
+        public async Task<ActionResult> PostAsync([FromBody] Product product, [BindNever] string name)
         {
             if (product is null) return BadRequest();
 
@@ -85,7 +86,7 @@ namespace CatalogAPI.Controllers
            _appDbContext.products.Remove(product);
            await _appDbContext.SaveChangesAsync();
 
-            return NoContent();
+           return NoContent();
         }
     }
 }
