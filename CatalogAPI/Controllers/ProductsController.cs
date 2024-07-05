@@ -17,14 +17,16 @@ namespace CatalogAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Product>> Get()
+        [HttpGet("test")]
+        public IActionResult Get()
         {
             try
             {
                 var products = _appDbContext.products.Take(10).AsNoTracking().ToList();
                 if (products is null) return NotFound();
 
-                return products;
+                return Ok(products);
+
 
             } catch (Exception ex)
             {
@@ -32,7 +34,7 @@ namespace CatalogAPI.Controllers
             }
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("{id:int:min(1)}")]
         public ActionResult<Product> GetById(int id)
         {
             var product = _appDbContext.products.FirstOrDefault(p => p.ProductId.Equals(id));
