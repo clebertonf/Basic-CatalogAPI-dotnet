@@ -15,7 +15,7 @@ public class Category
     [Key]
     public int CategoryId { get; set; }
 
-    [Required]
+    [Required(ErrorMessage = "O nome é obrigatorio.")]
     [StringLength(100)]
     public string? Name { get; set; }
     [Required]
