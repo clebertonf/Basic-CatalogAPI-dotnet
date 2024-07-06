@@ -1,6 +1,6 @@
 ﻿using CatalogAPI.Context;
 using CatalogAPI.Models;
-using Microsoft.AspNetCore.Http;
+using CatalogAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +15,12 @@ namespace CatalogAPI.Controllers
         public CategoriesController(AppDbContext appDbContext)
         {
             _appDbContext = appDbContext;
+        }
+
+        [HttpGet("service-teste")]
+        public IActionResult GetBasicService([FromServices] IBasicService basicService)
+        {
+            return Ok(basicService.GetMessage());
         }
 
         [HttpGet]
