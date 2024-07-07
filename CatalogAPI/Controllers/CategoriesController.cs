@@ -17,6 +17,15 @@ namespace CatalogAPI.Controllers
             _appDbContext = appDbContext;
         }
 
+        [HttpGet("config")]
+        public IActionResult GetConfigAppSettings([FromServices] IConfiguration configuration)
+        {
+            // var config = configuration["KeyName"];
+            var config = configuration.Get<AppSettings>();
+
+            return Ok($"ProjectName {config?.ProjectName} and DefaultTimeOut {config?.DefaultTimeOut}");
+        }
+
         [HttpGet("service-teste")]
         public IActionResult GetBasicService([FromServices] IBasicService basicService)
         {

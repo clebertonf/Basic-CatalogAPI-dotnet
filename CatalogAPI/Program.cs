@@ -1,4 +1,5 @@
 using CatalogAPI.Context;
+using CatalogAPI.Models;
 using CatalogAPI.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
@@ -17,6 +18,11 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
 
 builder.Services.AddSingleton<IBasicService, BasicService>();
+
+// get apiSettings values
+var apiSettings = builder.Configuration.Get<AppSettings>();
+var projectName = apiSettings?.ProjectName ;
+var defaultTimeout = apiSettings?.DefaultTimeOut;
 
 // builder.Services.Configure<ApiBehaviorOptions>(options => options.DisableImplicitFromServicesParameters = true);
 
