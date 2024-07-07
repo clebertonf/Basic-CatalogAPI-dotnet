@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using CatalogAPI.Validations;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -17,6 +18,7 @@ public class Category
 
     [Required(ErrorMessage = "O nome é obrigatorio.")]
     [StringLength(100)]
+    [ValidName]
     public string? Name { get; set; }
     [Required]
     [StringLength(300)]
