@@ -28,6 +28,23 @@ var defaultTimeout = apiSettings?.DefaultTimeOut;
 
 var app = builder.Build();
 
+/*
+ * examples of Middleware
+app.Use(async (context, next) => 
+{
+    // Code before Middleware ...
+    await next(context);
+    // Code after Middleware ...
+});
+*/
+
+/*
+app.Run(async (context) =>
+{
+    await context.Response.WriteAsync("Last Middleware executed.");
+});
+*/
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
