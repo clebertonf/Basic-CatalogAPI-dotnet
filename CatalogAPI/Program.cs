@@ -1,4 +1,5 @@
 using CatalogAPI.Context;
+using CatalogAPI.Extensions;
 using CatalogAPI.Models;
 using CatalogAPI.Services;
 using Microsoft.EntityFrameworkCore;
@@ -44,6 +45,9 @@ app.Run(async (context) =>
     await context.Response.WriteAsync("Last Middleware executed.");
 });
 */
+
+// Makes the app use the error middle
+app.ConfigureExceptionHandler();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
