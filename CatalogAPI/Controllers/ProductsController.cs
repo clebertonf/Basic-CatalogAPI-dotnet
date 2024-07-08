@@ -11,10 +11,12 @@ namespace CatalogAPI.Controllers
     public class ProductsController : ControllerBase
     {
         private readonly AppDbContext _appDbContext;
+        private readonly ILogger<ProductsController> _logger;
 
-        public ProductsController(AppDbContext appDbContext)
+        public ProductsController(AppDbContext appDbContext, ILogger<ProductsController> logger)
         {
             _appDbContext = appDbContext;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -23,9 +25,11 @@ namespace CatalogAPI.Controllers
         {
             try
             {
+                _logger.LogInformation("========== Searching for products ========== ");
                 var products = await _appDbContext.products.Take(10).AsNoTracking().ToListAsync();
                 if (products is null) return NotFound();
 
+                _logger.LogInformation("========== Products searched successfully! ========== ");
                 return Ok(products);
 
 
