@@ -1,4 +1,5 @@
 ﻿using CatalogAPI.Context;
+using CatalogAPI.Filters;
 using CatalogAPI.Models;
 using CatalogAPI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -28,6 +29,7 @@ namespace CatalogAPI.Controllers
         }
 
         [HttpGet("service-teste")]
+        [ServiceFilter(typeof(ApiLoggingFilter))]
         public IActionResult GetBasicService([FromServices] IBasicService basicService)
         {
             return Ok(basicService.GetMessage());
@@ -40,6 +42,7 @@ namespace CatalogAPI.Controllers
         }
 
         [HttpGet("/categories/products")]
+        [ServiceFilter(typeof(ApiLoggingFilter))]
         public IActionResult GetProducts() 
         { 
             return Ok(_appDbContext.categories.Include(p => p.Products).ToList());

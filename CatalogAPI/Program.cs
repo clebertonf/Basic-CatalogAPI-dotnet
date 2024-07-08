@@ -1,5 +1,6 @@
 using CatalogAPI.Context;
 using CatalogAPI.Extensions;
+using CatalogAPI.Filters;
 using CatalogAPI.Models;
 using CatalogAPI.Services;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +20,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
 
 builder.Services.AddSingleton<IBasicService, BasicService>();
+builder.Services.AddScoped<ApiLoggingFilter>();
 
 // get apiSettings values
 var apiSettings = builder.Configuration.Get<AppSettings>();
