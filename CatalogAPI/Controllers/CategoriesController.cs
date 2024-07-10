@@ -21,7 +21,7 @@ namespace CatalogAPI.Controllers
         [HttpGet("config")]
         public IActionResult GetConfigAppSettings([FromServices] IConfiguration configuration)
         {
-             throw new Exception();
+            // throw new Exception();
             // var config = configuration["KeyName"];
             var config = configuration.Get<AppSettings>();
 
