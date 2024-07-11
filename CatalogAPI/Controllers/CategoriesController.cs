@@ -1,9 +1,8 @@
-﻿using CatalogAPI.Context;
-using CatalogAPI.Filters;
+﻿using CatalogAPI.Filters;
 using CatalogAPI.Models;
+using CatalogAPI.Repositories;
 using CatalogAPI.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace CatalogAPI.Controllers
 {
@@ -11,11 +10,11 @@ namespace CatalogAPI.Controllers
     [ApiController]
     public class CategoriesController : ControllerBase
     {
-        private readonly AppDbContext _appDbContext;
+        private readonly ICategoriesRepository _categoriesRepository;
 
-        public CategoriesController(AppDbContext appDbContext)
+        public CategoriesController(ICategoriesRepository categoriesRepository)
         {
-            _appDbContext = appDbContext;
+            _categoriesRepository = categoriesRepository;
         }
 
         [HttpGet("config")]
@@ -38,20 +37,20 @@ namespace CatalogAPI.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(_appDbContext.categories.Take(10).AsNoTracking().ToList());
+            return Ok(_categoriesRepository.GetAllCategories(10));
         }
 
         [HttpGet("/categories/products")]
         [ServiceFilter(typeof(ApiLoggingFilter))]
         public IActionResult GetProducts() 
         { 
-            return Ok(_appDbContext.categories.Include(p => p.Products).ToList());
+            return Ok(_categoriesRepository.GeTAllCategoriesWithProducts());
         }
 
         [HttpGet("{id:int}")]
         public IActionResult GetById(int id)
         {
-            var category = _appDbContext.categories.FirstOrDefault(c => c.CategoryId.Equals(id));
+            var category = _categoriesRepository.GetCategory(id);
             if (category is null) return NotFound();
 
             return Ok(category);
@@ -62,8 +61,7 @@ namespace CatalogAPI.Controllers
         {
             if (category is null) return BadRequest();
 
-            _appDbContext.categories.Add(category);
-            _appDbContext.SaveChanges();
+            _categoriesRepository.CreateCategory(category);
 
             return CreatedAtAction(nameof(GetById), new { id = category.CategoryId }, category);
         }
@@ -73,31 +71,15 @@ namespace CatalogAPI.Controllers
         {
             if (!category.CategoryId.Equals(id)) return BadRequest();
 
-            /*
-            * Pode ser feito assim, com algumas desvantagens:
-            * _appDbContext.Entry(category).State = EntityState.Modified;
-            _appDbContext.SaveChanges();
-           */
-
-            var categoryResult = _appDbContext.categories.FirstOrDefault(c => c.CategoryId.Equals(id));
-            if (categoryResult is null) return NotFound();
-
-            categoryResult.Name = category.Name;
-            categoryResult.UrlImage = category.UrlImage;
-
-            _appDbContext.SaveChanges();
-
-            return Ok();
+            return Ok(_categoriesRepository.UpdateCategory(category));
         }
 
         [HttpDelete("{id:int}")]
         public IActionResult Delete(int id)
         {
-            var categorie = _appDbContext.categories.FirstOrDefault(c => c.CategoryId.Equals(id));
-            if (categorie is null) return NotFound();
+            var categorie = _categoriesRepository.DeleteCategory(id);
 
-            _appDbContext.Remove(categorie);
-            _appDbContext.SaveChanges();
+            if (categorie is null) return BadRequest();
 
             return NoContent();
         }

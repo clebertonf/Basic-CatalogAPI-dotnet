@@ -1,5 +1,6 @@
 ﻿using CatalogAPI.Context;
 using CatalogAPI.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace CatalogAPI.Repositories
 {
@@ -12,9 +13,14 @@ namespace CatalogAPI.Repositories
             _appDbContext = appDbContext;
         }
 
-        public IEnumerable<Category> GetAllCategories()
+        public IEnumerable<Category> GetAllCategories(int size)
         {
-            return _appDbContext.categories.ToList();
+            return _appDbContext.categories.Take(size).AsNoTracking().ToList();
+        }
+
+        public IEnumerable<Category> GeTAllCategoriesWithProducts()
+        {
+           return _appDbContext.categories.Include(c => c.Products).ToList();
         }
 
         public Category GetCategory(int id)
@@ -37,7 +43,13 @@ namespace CatalogAPI.Repositories
 
         public Category UpdateCategory(Category category)
         {
-            var categorie = _appDbContext.categories.FirstOrDefault(c => c.CategoryId.Equals(category));
+            /*
+            * Pode ser feito assim, com algumas desvantagens:
+            * _appDbContext.Entry(category).State = EntityState.Modified;
+            _appDbContext.SaveChanges();
+           */
+
+            var categorie = _appDbContext.categories.FirstOrDefault(c => c.CategoryId.Equals(category.CategoryId));
             if (categorie is null) throw new ArgumentNullException(nameof(categorie));
 
             categorie.Name = category.Name;
