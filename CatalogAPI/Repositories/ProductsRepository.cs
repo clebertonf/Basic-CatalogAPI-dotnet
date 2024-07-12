@@ -1,5 +1,6 @@
 ﻿using CatalogAPI.Context;
 using CatalogAPI.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace CatalogAPI.Repositories
 {
@@ -12,9 +13,9 @@ namespace CatalogAPI.Repositories
             _appDbContext = appDbContext;
         }
 
-        public IEnumerable<Product> GetProducts()
+        public IEnumerable<Product> GetProducts(int size)
         {
-            return _appDbContext.products.ToList();
+            return _appDbContext.products.Take(size).AsNoTracking().ToList();
         }
 
         public Product GetProduct(int id)

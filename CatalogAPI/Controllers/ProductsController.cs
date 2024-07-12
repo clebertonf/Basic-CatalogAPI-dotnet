@@ -1,8 +1,7 @@
-﻿using CatalogAPI.Context;
-using CatalogAPI.Models;
+﻿using CatalogAPI.Models;
+using CatalogAPI.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.EntityFrameworkCore;
 
 namespace CatalogAPI.Controllers
 {
@@ -10,12 +9,12 @@ namespace CatalogAPI.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        private readonly AppDbContext _appDbContext;
+        private readonly IProductsRepository _productsRepository;
         private readonly ILogger<ProductsController> _logger;
 
-        public ProductsController(AppDbContext appDbContext, ILogger<ProductsController> logger)
+        public ProductsController(IProductsRepository productsRepository, ILogger<ProductsController> logger)
         {
-            _appDbContext = appDbContext;
+            _productsRepository = productsRepository;
             _logger = logger;
         }
 
@@ -26,7 +25,7 @@ namespace CatalogAPI.Controllers
             try
             {
                 _logger.LogInformation("========== Searching for products ========== ");
-                var products = await _appDbContext.products.Take(10).AsNoTracking().ToListAsync();
+                var products = _productsRepository.GetProducts(10);
                 if (products is null) return NotFound();
 
                 _logger.LogInformation("========== Products searched successfully! ========== ");
@@ -40,23 +39,22 @@ namespace CatalogAPI.Controllers
         }
 
         [HttpGet("{id:int:min(1)}")]
-        public async Task<ActionResult<Product>> GetByIdAsync(int id, [BindRequired] string name)
+        public async Task<ActionResult<Product>> GetByIdAsync(int id) // [BindRequired] string name = ""
         {
-            var product = await _appDbContext.products.FirstOrDefaultAsync(p => p.ProductId.Equals(id));
+            var product = _productsRepository.GetProduct(id);
             if (product is null) return NotFound("Product not found!");
 
             return product;
         }
 
         [HttpPost]
-        public async Task<ActionResult> PostAsync([FromBody] Product product, [BindNever] string name)
+        public async Task<ActionResult> PostAsync([FromBody] Product product) // [BindNever] string name = ""
         {
             if (product is null) return BadRequest();
 
-            await _appDbContext.products.AddAsync(product);
-            await _appDbContext.SaveChangesAsync();
+             _productsRepository.CreateProduct(product);
 
-            return CreatedAtAction(nameof(GetByIdAsync), new { id = product.ProductId}, product);
+            return Created();
         }
 
         [HttpPut("{id:int}")]
@@ -64,32 +62,15 @@ namespace CatalogAPI.Controllers
         {
             if (!id.Equals(product.ProductId)) return BadRequest();
 
-            /*
-             * Pode ser feito assim, com algumas desvantagens:
-             * _appDbContext.Entry(product).State = EntityState.Modified;
-             _appDbContext.SaveChanges();
-            */
-
-            var productData = await _appDbContext.products.FirstOrDefaultAsync(p => p.ProductId.Equals(id));
-            if (productData is null) return NotFound();
-
-            productData.Name = product.Name;
-            productData.Description = product.Description;
-
-            await _appDbContext.SaveChangesAsync();
+            _productsRepository.UpdateProduct(product);
 
             return Ok(product);
         }
 
         [HttpDelete("{id:int}")]
         public async Task<ActionResult> DeleteAsync(int id)
-        {
-           var product = await _appDbContext.products.FirstOrDefaultAsync(p => p.ProductId.Equals(id));
-           if (product is null) return NotFound();
-
-           _appDbContext.products.Remove(product);
-           await _appDbContext.SaveChangesAsync();
-
+        { 
+           _productsRepository.DeleteProduct(id);
            return NoContent();
         }
     }
