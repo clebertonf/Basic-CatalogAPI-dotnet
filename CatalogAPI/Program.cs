@@ -3,6 +3,7 @@ using CatalogAPI.Extensions;
 using CatalogAPI.Filters;
 using CatalogAPI.Models;
 using CatalogAPI.Repositories;
+using CatalogAPI.Repositories.Generic;
 using CatalogAPI.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
@@ -25,6 +26,8 @@ builder.Services.AddSingleton<IBasicService, BasicService>();
 builder.Services.AddScoped<ApiLoggingFilter>();
 builder.Services.AddScoped<ICategoriesRepository, CategoriesRepository>();
 builder.Services.AddScoped<IProductsRepository, ProductsRepository>();
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
 
 // get apiSettings values
 var apiSettings = builder.Configuration.Get<AppSettings>();
