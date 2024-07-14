@@ -1,5 +1,5 @@
 ﻿using CatalogAPI.Models;
-using CatalogAPI.Repositories;
+using CatalogAPI.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CatalogAPI.Controllers

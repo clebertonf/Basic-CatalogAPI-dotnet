@@ -1,5 +1,6 @@
 ﻿using CatalogAPI.Context;
 using CatalogAPI.Models;
+using CatalogAPI.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace CatalogAPI.Repositories

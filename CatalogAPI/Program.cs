@@ -4,6 +4,7 @@ using CatalogAPI.Filters;
 using CatalogAPI.Models;
 using CatalogAPI.Repositories;
 using CatalogAPI.Repositories.Generic;
+using CatalogAPI.Repositories.Interfaces;
 using CatalogAPI.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;

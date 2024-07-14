@@ -1,6 +1,6 @@
 ﻿using CatalogAPI.Filters;
 using CatalogAPI.Models;
-using CatalogAPI.Repositories;
+using CatalogAPI.Repositories.Interfaces;
 using CatalogAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 
