@@ -2,8 +2,7 @@
 {
     public interface IUnitOfWork
     {
-        IProductsRepository ProductsRepository { get; }
-        ICategoriesRepository CategoriesRepository { get; }
+        ICustomerRepository CustomerRepository { get; }
         void Commit();
     }
 }

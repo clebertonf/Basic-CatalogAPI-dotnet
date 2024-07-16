@@ -1,4 +1,5 @@
 ﻿using CatalogAPI.Context;
+using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace CatalogAPI.Repositories.Generic
@@ -14,7 +15,7 @@ namespace CatalogAPI.Repositories.Generic
 
         public IEnumerable<T> GetAll()
         {
-            return _appDbContext.Set<T>().ToList();
+            return _appDbContext.Set<T>().AsNoTracking().ToList();
         }
 
         public T? Get(Expression<Func<T, bool>> predicate)
@@ -25,7 +26,7 @@ namespace CatalogAPI.Repositories.Generic
         public T Create(T entity)
         {
             _appDbContext.Set<T>().Add(entity);
-            _appDbContext.SaveChanges();
+            // _appDbContext.SaveChanges(); It is now the responsibility of the unit of work standard
             return entity;
         }
 
@@ -33,14 +34,14 @@ namespace CatalogAPI.Repositories.Generic
         {
             // _appDbContext.Entry(entity).State = EntityState.Modified;
             _appDbContext.Set<T>().Update(entity);
-            _appDbContext.SaveChanges();
+            // _appDbContext.SaveChanges(); It is now the responsibility of the unit of work standard
             return entity;
         }
 
         public T Delete(T entity)
         {
             _appDbContext.Set<T>().Remove(entity);
-            _appDbContext.SaveChanges();
+            // _appDbContext.SaveChanges(); It is now the responsibility of the unit of work standard
             return entity;
         }
     }

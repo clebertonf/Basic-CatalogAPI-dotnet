@@ -1,30 +1,31 @@
 ﻿using CatalogAPI.Models;
-using CatalogAPI.Repositories.Generic;
+using CatalogAPI.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CatalogAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CustomerContoller : ControllerBase
+    public class CustomerContollerUnitOfWorkStandard : ControllerBase
     {
-        private readonly IRepository<Customer> _customerRepository;
+        // private readonly IRepository<Customer> _customerRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CustomerContoller(IRepository<Customer> customerRepository)
+        public CustomerContollerUnitOfWorkStandard(IUnitOfWork unitOfWork)
         {
-            _customerRepository = customerRepository;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpGet("customers")]
         public IActionResult Get()
         {
-            return Ok(_customerRepository.GetAll());
+            return Ok(_unitOfWork.CustomerRepository.GetAll());
         }
 
         [HttpGet("customer")]
         public IActionResult GetId(int id)
         {
-            var customer = _customerRepository.Get((c) => c.CustmoerId.Equals(id));
+            var customer = _unitOfWork.CustomerRepository.Get((c) => c.CustmoerId.Equals(id));
             if (customer is null)
                 return NotFound();
 
@@ -36,7 +37,8 @@ namespace CatalogAPI.Controllers
         {
             if (customer is null) return BadRequest();
 
-            _customerRepository.Create(customer);
+            _unitOfWork.CustomerRepository.Create(customer);
+            _unitOfWork.Commit();
 
             return CreatedAtAction(nameof(GetId), new { id = customer.CustmoerId }, customer);
         }
@@ -46,7 +48,8 @@ namespace CatalogAPI.Controllers
         {
             if(customer is null) return BadRequest();
          
-            _customerRepository.Update(customer);
+            _unitOfWork.CustomerRepository.Update(customer);
+            _unitOfWork.Commit();
 
             return NoContent();
         }
@@ -54,11 +57,12 @@ namespace CatalogAPI.Controllers
         [HttpDelete("customer")]
         public IActionResult Delete(int id)
         {
-            var customer = _customerRepository.Get((c) => c.CustmoerId.Equals(id));
+            var customer = _unitOfWork.CustomerRepository.Get((c) => c.CustmoerId.Equals(id));
 
             if (customer is null) return NotFound();
 
-            _customerRepository.Delete(customer);
+            _unitOfWork.CustomerRepository.Delete(customer);
+            _unitOfWork.Commit();
 
             return NoContent();
         }
