@@ -1,4 +1,5 @@
-﻿using CatalogAPI.Filters;
+﻿using CatalogAPI.DTOs;
+using CatalogAPI.Filters;
 using CatalogAPI.Models;
 using CatalogAPI.Repositories.Interfaces;
 using CatalogAPI.Services;
@@ -57,20 +58,18 @@ namespace CatalogAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post(Category category)
+        public IActionResult Post(CategoryDTO category)
         {
             if (category is null) return BadRequest();
 
             _categoriesRepository.CreateCategory(category);
 
-            return CreatedAtAction(nameof(GetById), new { id = category.CategoryId }, category);
+            return Created();
         }
 
         [HttpPut("{id:int}")]
-        public IActionResult Put(int id, Category category)
+        public IActionResult Put(int id, CategoryDTO category)
         {
-            if (!category.CategoryId.Equals(id)) return BadRequest();
-
             return Ok(_categoriesRepository.UpdateCategory(category));
         }
 

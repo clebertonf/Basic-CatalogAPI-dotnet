@@ -1,4 +1,5 @@
 ﻿using CatalogAPI.Context;
+using CatalogAPI.DTOs;
 using CatalogAPI.Models;
 using CatalogAPI.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -14,9 +15,23 @@ namespace CatalogAPI.Repositories
             _appDbContext = appDbContext;
         }
 
-        public IEnumerable<Category> GetAllCategories(int size)
+        public IEnumerable<CategoryDTO> GetAllCategories(int size)
         {
-            return _appDbContext.categories.Take(size).AsNoTracking().ToList();
+            var categories = _appDbContext.categories.Take(size).AsNoTracking().ToList();
+            var categoriesDTO = new List<CategoryDTO>();
+
+            foreach (var categorie in categories)
+            {
+                var categoryDTO = new CategoryDTO()
+                {
+                    CategoryId = categorie.CategoryId,
+                    Name = categorie.Name,
+                    UrlImage = categorie.UrlImage
+                };
+                categoriesDTO.Add(categoryDTO);
+            };
+
+            return categoriesDTO;
         }
 
         public IEnumerable<Category> GeTAllCategoriesWithProducts()
@@ -24,25 +39,36 @@ namespace CatalogAPI.Repositories
            return _appDbContext.categories.Include(c => c.Products).ToList();
         }
 
-        public Category GetCategory(int id)
+        public CategoryDTO GetCategory(int id)
         {
             var categorie = _appDbContext.categories.FirstOrDefault(c => c.CategoryId.Equals(id));
             if (categorie is null) throw new ArgumentNullException(nameof(categorie));
 
-            return categorie;
+            return new CategoryDTO()
+            {
+                CategoryId = categorie.CategoryId,
+                Name = categorie.Name,
+                UrlImage = categorie.UrlImage
+            };
         }
 
-        public Category CreateCategory(Category category)
+        public CategoryDTO CreateCategory(CategoryDTO categorieDTO)
         {
-            if (category is null) throw new ArgumentNullException(nameof(category));
+            if (categorieDTO is null) throw new ArgumentNullException(nameof(categorieDTO));
 
-            _appDbContext.categories.Add(category);
+            var categorie = new Category()
+            {
+                Name = categorieDTO.Name,
+                UrlImage = categorieDTO.UrlImage
+            };
+
+            _appDbContext.categories.Add(categorie);
             _appDbContext.SaveChanges();
 
-            return category;
+            return categorieDTO;
         }
 
-        public Category UpdateCategory(Category category)
+        public CategoryDTO UpdateCategory(CategoryDTO categorieDTO)
         {
             /*
             * Pode ser feito assim, com algumas desvantagens:
@@ -50,18 +76,25 @@ namespace CatalogAPI.Repositories
             _appDbContext.SaveChanges();
            */
 
-            var categorie = _appDbContext.categories.FirstOrDefault(c => c.CategoryId.Equals(category.CategoryId));
+            var categorie = new Category()
+            {
+                CategoryId = categorieDTO.CategoryId,
+                Name = categorieDTO.Name,
+                UrlImage = categorieDTO.UrlImage
+            };
+
+            var categorieResponse = _appDbContext.categories.FirstOrDefault(c => c.CategoryId.Equals(categorie.CategoryId));
             if (categorie is null) throw new ArgumentNullException(nameof(categorie));
 
-            categorie.Name = category.Name;
-            categorie.UrlImage = category.UrlImage;
+            categorieResponse.Name = categorie.Name;
+            categorieResponse.UrlImage = categorie.UrlImage;
 
             _appDbContext.SaveChanges();
 
-            return categorie;
+            return categorieDTO;
         }
 
-        public Category DeleteCategory(int id)
+        public CategoryDTO DeleteCategory(int id)
         {
             var categorie = _appDbContext.categories.Find(id);
             if (categorie is null) throw new ArgumentNullException(nameof(categorie));
@@ -69,7 +102,11 @@ namespace CatalogAPI.Repositories
             _appDbContext.categories.Remove(categorie);
             _appDbContext.SaveChanges();
 
-            return categorie;
+            return new CategoryDTO()
+            {
+                Name = categorie.Name,
+                UrlImage = categorie.UrlImage
+            };
         }
     }
 }

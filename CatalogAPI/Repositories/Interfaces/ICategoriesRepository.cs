@@ -1,14 +1,15 @@
-﻿using CatalogAPI.Models;
+﻿using CatalogAPI.DTOs;
+using CatalogAPI.Models;
 
 namespace CatalogAPI.Repositories.Interfaces
 {
     public interface ICategoriesRepository
     {
-        public IEnumerable<Category> GetAllCategories(int size);
+        public IEnumerable<CategoryDTO> GetAllCategories(int size);
         public IEnumerable<Category> GeTAllCategoriesWithProducts();
-        public Category GetCategory(int id);
-        public Category CreateCategory(Category category);
-        public Category UpdateCategory(Category category);
-        public Category DeleteCategory(int id);
+        public CategoryDTO GetCategory(int id);
+        public CategoryDTO CreateCategory(CategoryDTO category);
+        public CategoryDTO UpdateCategory(CategoryDTO category);
+        public CategoryDTO DeleteCategory(int id);
     }
 }
