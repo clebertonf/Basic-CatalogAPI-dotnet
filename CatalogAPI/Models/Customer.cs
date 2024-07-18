@@ -9,7 +9,7 @@ namespace CatalogAPI.Models
         public string Name { get; set; }
         public int Age { get; set; }
         public int CustomerCode { get; set; }
-        public string PhoneNumber { get; set; }
-        public CustomerAddress Address { get; set; }
+        public string? PhoneNumber { get; set; }
+        public CustomerAddress? Address { get; set; }
     }
 }

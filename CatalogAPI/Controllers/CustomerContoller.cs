@@ -1,4 +1,6 @@
-﻿using CatalogAPI.Models;
+﻿using AutoMapper;
+using CatalogAPI.DTOs;
+using CatalogAPI.Models;
 using CatalogAPI.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,16 +12,20 @@ namespace CatalogAPI.Controllers
     {
         // private readonly IRepository<Customer> _customerRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public CustomerContollerUnitOfWorkStandard(IUnitOfWork unitOfWork)
+        public CustomerContollerUnitOfWorkStandard(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
         [HttpGet("customers")]
         public IActionResult Get()
         {
-            return Ok(_unitOfWork.CustomerRepository.GetAll());
+            var customers = _unitOfWork.CustomerRepository.GetAll();
+            var customersMapper = _mapper.Map<IEnumerable<CustomerDTO>>(customers);
+            return Ok(customersMapper);
         }
 
         [HttpGet("customer")]
@@ -29,13 +35,16 @@ namespace CatalogAPI.Controllers
             if (customer is null)
                 return NotFound();
 
-            return Ok(customer);
+            var customerMapper = _mapper.Map<CustomerDTO>(customer);
+            return Ok(customerMapper);
         }
 
         [HttpPost("customer")]
-        public IActionResult Post([FromBody] Customer customer)
+        public IActionResult Post([FromBody] CustomerDTO customerDTO)
         {
-            if (customer is null) return BadRequest();
+            if (customerDTO is null) return BadRequest();
+
+            var customer = _mapper.Map<Customer>(customerDTO);
 
             _unitOfWork.CustomerRepository.Create(customer);
             _unitOfWork.Commit();

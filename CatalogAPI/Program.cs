@@ -1,4 +1,5 @@
 using CatalogAPI.Context;
+using CatalogAPI.DTOs.Mappings;
 using CatalogAPI.Extensions;
 using CatalogAPI.Filters;
 using CatalogAPI.Models;
@@ -29,6 +30,7 @@ builder.Services.AddScoped<ICategoriesRepository, CategoriesRepository>();
 builder.Services.AddScoped<IProductsRepository, ProductsRepository>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 
 // get apiSettings values
