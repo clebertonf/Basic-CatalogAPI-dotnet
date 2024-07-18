@@ -9,4 +9,10 @@ public class AppDbContext : DbContext
     public DbSet<Customer> customers { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Customer>()
+            .OwnsOne(c => c.Address);
+    }
 }
