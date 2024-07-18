@@ -1,5 +1,6 @@
 ﻿using CatalogAPI.Context;
 using CatalogAPI.DTOs;
+using CatalogAPI.DTOs.Extensions;
 using CatalogAPI.Models;
 using CatalogAPI.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -18,20 +19,9 @@ namespace CatalogAPI.Repositories
         public IEnumerable<CategoryDTO> GetAllCategories(int size)
         {
             var categories = _appDbContext.categories.Take(size).AsNoTracking().ToList();
-            var categoriesDTO = new List<CategoryDTO>();
+            var response = CategoriaDTOMappingExtensions.TocategoryDTOList(categories);
 
-            foreach (var categorie in categories)
-            {
-                var categoryDTO = new CategoryDTO()
-                {
-                    CategoryId = categorie.CategoryId,
-                    Name = categorie.Name,
-                    UrlImage = categorie.UrlImage
-                };
-                categoriesDTO.Add(categoryDTO);
-            };
-
-            return categoriesDTO;
+            return response;
         }
 
         public IEnumerable<Category> GeTAllCategoriesWithProducts()
@@ -44,23 +34,14 @@ namespace CatalogAPI.Repositories
             var categorie = _appDbContext.categories.FirstOrDefault(c => c.CategoryId.Equals(id));
             if (categorie is null) throw new ArgumentNullException(nameof(categorie));
 
-            return new CategoryDTO()
-            {
-                CategoryId = categorie.CategoryId,
-                Name = categorie.Name,
-                UrlImage = categorie.UrlImage
-            };
+            return CategoriaDTOMappingExtensions.ToCategoryDTO(categorie);
         }
 
         public CategoryDTO CreateCategory(CategoryDTO categorieDTO)
         {
             if (categorieDTO is null) throw new ArgumentNullException(nameof(categorieDTO));
 
-            var categorie = new Category()
-            {
-                Name = categorieDTO.Name,
-                UrlImage = categorieDTO.UrlImage
-            };
+            var categorie = CategoriaDTOMappingExtensions.ToCategory(categorieDTO);
 
             _appDbContext.categories.Add(categorie);
             _appDbContext.SaveChanges();
@@ -76,12 +57,7 @@ namespace CatalogAPI.Repositories
             _appDbContext.SaveChanges();
            */
 
-            var categorie = new Category()
-            {
-                CategoryId = categorieDTO.CategoryId,
-                Name = categorieDTO.Name,
-                UrlImage = categorieDTO.UrlImage
-            };
+            var categorie = CategoriaDTOMappingExtensions.ToCategory(categorieDTO);
 
             var categorieResponse = _appDbContext.categories.FirstOrDefault(c => c.CategoryId.Equals(categorie.CategoryId));
             if (categorie is null) throw new ArgumentNullException(nameof(categorie));
@@ -102,11 +78,7 @@ namespace CatalogAPI.Repositories
             _appDbContext.categories.Remove(categorie);
             _appDbContext.SaveChanges();
 
-            return new CategoryDTO()
-            {
-                Name = categorie.Name,
-                UrlImage = categorie.UrlImage
-            };
+           return CategoriaDTOMappingExtensions.ToCategoryDTO(categorie);
         }
     }
 }
