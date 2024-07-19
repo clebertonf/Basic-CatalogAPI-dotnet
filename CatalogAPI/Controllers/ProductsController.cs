@@ -1,4 +1,5 @@
 ﻿using CatalogAPI.Models;
+using CatalogAPI.Pagination;
 using CatalogAPI.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,6 +36,12 @@ namespace CatalogAPI.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, $"This is a error! {ex.Message}"); // example
             }
+        }
+
+        [HttpGet("pagination")]
+        public IActionResult GetPagination([FromQuery] ProductsParameters productsParameters)
+        {
+            return Ok(_productsRepository.GetProductsPagination(productsParameters));
         }
 
         [HttpGet("{id:int:min(1)}")]

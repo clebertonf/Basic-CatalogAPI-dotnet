@@ -1,5 +1,6 @@
 ﻿using CatalogAPI.Context;
 using CatalogAPI.Models;
+using CatalogAPI.Pagination;
 using CatalogAPI.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,6 +18,14 @@ namespace CatalogAPI.Repositories
         public IEnumerable<Product> GetProducts(int size)
         {
             return _appDbContext.products.Take(size).AsNoTracking().ToList();
+        }
+
+        public IEnumerable<Product> GetProductsPagination(ProductsParameters productsParameters)
+        {
+            return _appDbContext.products
+                   .OrderBy(p => p.ProductId)
+                   .Skip((productsParameters.pageNumber - 1) * productsParameters.pageSize)
+                   .Take(productsParameters.pageSize).ToList();
         }
 
         public Product GetProduct(int id)
