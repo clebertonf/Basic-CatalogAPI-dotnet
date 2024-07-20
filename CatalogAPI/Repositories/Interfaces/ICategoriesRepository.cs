@@ -1,5 +1,6 @@
 ﻿using CatalogAPI.DTOs;
 using CatalogAPI.Models;
+using CatalogAPI.Pagination;
 
 namespace CatalogAPI.Repositories.Interfaces
 {
@@ -7,6 +8,7 @@ namespace CatalogAPI.Repositories.Interfaces
     {
         public IEnumerable<CategoryDTO> GetAllCategories(int size);
         public IEnumerable<Category> GeTAllCategoriesWithProducts();
+        public PagedList<Category> GetCategoryPagination(CateroryParameters categoryParameter);
         public CategoryDTO GetCategory(int id);
         public CategoryDTO CreateCategory(CategoryDTO category);
         public CategoryDTO UpdateCategory(CategoryDTO category);

@@ -1,9 +1,11 @@
 ﻿using CatalogAPI.DTOs;
 using CatalogAPI.Filters;
 using CatalogAPI.Models;
+using CatalogAPI.Pagination;
 using CatalogAPI.Repositories.Interfaces;
 using CatalogAPI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace CatalogAPI.Controllers
 {
@@ -39,6 +41,26 @@ namespace CatalogAPI.Controllers
         public IActionResult Get()
         {
             return Ok(_categoriesRepository.GetAllCategories(10));
+        }
+
+        [HttpGet("pagination")]
+        public IActionResult GetPagination([FromQuery] CateroryParameters cateroryParameters)
+        {
+            var response = _categoriesRepository.GetCategoryPagination(cateroryParameters);
+
+            var metaData = new
+            {
+                response.TotalCount,
+                response.PageSize,
+                response.CurrentPage,
+                response.TotalPages,
+                response.HasNext,
+                response.HasPrevious
+            };
+
+            Response.Headers.Append("X-Pagination-Info", JsonConvert.SerializeObject(metaData));
+
+            return Ok(response);
         }
 
         [HttpGet("/categories/products")]

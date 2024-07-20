@@ -2,8 +2,10 @@
 using CatalogAPI.DTOs;
 using CatalogAPI.DTOs.Extensions;
 using CatalogAPI.Models;
+using CatalogAPI.Pagination;
 using CatalogAPI.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Drawing;
 
 namespace CatalogAPI.Repositories
 {
@@ -79,6 +81,15 @@ namespace CatalogAPI.Repositories
             _appDbContext.SaveChanges();
 
            return CategoriaDTOMappingExtensions.ToCategoryDTO(categorie);
+        }
+
+        public PagedList<Category> GetCategoryPagination(CateroryParameters categoryParameter)
+        {
+            var categories = _appDbContext.categories.OrderBy(p => p.CategoryId).AsQueryable();
+
+            var orderCategory = PagedList<Category>.ToPagedList(categories, categoryParameter.pageNumber, categoryParameter.pageSize);
+
+            return orderCategory;
         }
     }
 }
