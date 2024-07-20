@@ -20,12 +20,19 @@ namespace CatalogAPI.Repositories
             return _appDbContext.products.Take(size).AsNoTracking().ToList();
         }
 
-        public IEnumerable<Product> GetProductsPagination(ProductsParameters productsParameters)
+        /*public IEnumerable<Product> GetProductsPagination(ProductsParameters productsParameters)
         {
             return _appDbContext.products
                    .OrderBy(p => p.ProductId)
                    .Skip((productsParameters.pageNumber - 1) * productsParameters.pageSize)
                    .Take(productsParameters.pageSize).ToList();
+        }*/
+
+        public PagedList<Product> GetProductsPagination(ProductsParameters productsParameters)
+        {
+           var products = _appDbContext.products.OrderBy(p => p.ProductId).AsQueryable();
+           var orderProducts = PagedList<Product>.ToPagedList(products, productsParameters.pageNumber, productsParameters.pageSize);
+           return orderProducts;
         }
 
         public Product GetProduct(int id)
