@@ -3,6 +3,7 @@ using CatalogAPI.DTOs;
 using CatalogAPI.DTOs.Extensions;
 using CatalogAPI.Models;
 using CatalogAPI.Pagination;
+using CatalogAPI.Pagination.Filter;
 using CatalogAPI.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Drawing;
@@ -90,6 +91,18 @@ namespace CatalogAPI.Repositories
             var orderCategory = PagedList<Category>.ToPagedList(categories, categoryParameter.pageNumber, categoryParameter.pageSize);
 
             return orderCategory;
+        }
+
+        public PagedList<Category> GetCategoryByName(CategoryFilterName categoryFilterName)
+        {
+            var categories = _appDbContext.categories.AsNoTracking().AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(categoryFilterName.Name))
+            {
+                categories = categories.Where(c => c.Name.Contains(categoryFilterName.Name));
+            }
+
+            return PagedList<Category>.ToPagedList(categories, categoryFilterName.pageNumber, categoryFilterName.pageSize);
         }
     }
 }

@@ -2,6 +2,7 @@
 using CatalogAPI.Filters;
 using CatalogAPI.Models;
 using CatalogAPI.Pagination;
+using CatalogAPI.Pagination.Filter;
 using CatalogAPI.Repositories.Interfaces;
 using CatalogAPI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -47,6 +48,26 @@ namespace CatalogAPI.Controllers
         public IActionResult GetPagination([FromQuery] CateroryParameters cateroryParameters)
         {
             var response = _categoriesRepository.GetCategoryPagination(cateroryParameters);
+
+            var metaData = new
+            {
+                response.TotalCount,
+                response.PageSize,
+                response.CurrentPage,
+                response.TotalPages,
+                response.HasNext,
+                response.HasPrevious
+            };
+
+            Response.Headers.Append("X-Pagination-Info", JsonConvert.SerializeObject(metaData));
+
+            return Ok(response);
+        }
+
+        [HttpGet("pagination/filter")]
+        public IActionResult GetPaginationFilter([FromQuery] CategoryFilterName categoryFilterName)
+        {
+            var response = _categoriesRepository.GetCategoryByName(categoryFilterName);
 
             var metaData = new
             {
