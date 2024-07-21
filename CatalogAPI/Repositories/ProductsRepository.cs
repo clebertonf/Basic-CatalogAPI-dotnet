@@ -1,8 +1,10 @@
 ﻿using CatalogAPI.Context;
 using CatalogAPI.Models;
 using CatalogAPI.Pagination;
+using CatalogAPI.Pagination.Filter;
 using CatalogAPI.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Drawing;
 
 namespace CatalogAPI.Repositories
 {
@@ -79,6 +81,29 @@ namespace CatalogAPI.Repositories
             _appDbContext.SaveChanges();
 
             return productResponse;
+        }
+
+        public PagedList<Product> GetProductsByFilter(ProductsFilterPrice productsFilterPrice)
+        {
+            var products = _appDbContext.products.AsNoTracking().AsQueryable();
+
+            if(productsFilterPrice.Price.HasValue && !string.IsNullOrWhiteSpace(productsFilterPrice.Criterion))
+            {
+                if(productsFilterPrice.Criterion.Equals("maior", StringComparison.OrdinalIgnoreCase)) {
+                    products = products.Where(p => p.Price > productsFilterPrice.Price.Value);
+                }
+                if (productsFilterPrice.Criterion.Equals("menor", StringComparison.OrdinalIgnoreCase))
+                {
+                    products = products.Where(p => p.Price < productsFilterPrice.Price.Value);
+                }
+                if (productsFilterPrice.Criterion.Equals("igual", StringComparison.OrdinalIgnoreCase))
+                {
+                    products = products.Where(p => p.Price == productsFilterPrice.Price.Value);
+                }
+            }
+
+            var productsFilter = PagedList<Product>.ToPagedList(products, productsFilterPrice.pageNumber, productsFilterPrice.pageSize);
+            return productsFilter;
         }
     }
 }
