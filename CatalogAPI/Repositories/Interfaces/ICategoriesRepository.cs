@@ -7,8 +7,8 @@ namespace CatalogAPI.Repositories.Interfaces
 {
     public interface ICategoriesRepository
     {
-        public IEnumerable<CategoryDTO> GetAllCategories(int size);
-        public IEnumerable<Category> GeTAllCategoriesWithProducts();
+        public Task<IEnumerable<CategoryDTO>> GetAllCategoriesAsync(int size);
+        public Task<IEnumerable<Category>> GeTAllCategoriesWithProductsAsync();
         public PagedList<Category> GetCategoryPagination(CateroryParameters categoryParameter);
         public PagedList<Category> GetCategoryByName(CategoryFilterName categoryFilterName);
         public CategoryDTO GetCategory(int id);

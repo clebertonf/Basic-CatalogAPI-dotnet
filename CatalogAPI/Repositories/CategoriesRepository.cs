@@ -19,17 +19,17 @@ namespace CatalogAPI.Repositories
             _appDbContext = appDbContext;
         }
 
-        public IEnumerable<CategoryDTO> GetAllCategories(int size)
+        public async Task<IEnumerable<CategoryDTO>> GetAllCategoriesAsync(int size)
         {
-            var categories = _appDbContext.categories.Take(size).AsNoTracking().ToList();
+            var categories = await _appDbContext.categories.Take(size).AsNoTracking().ToListAsync();
             var response = CategoriaDTOMappingExtensions.TocategoryDTOList(categories);
 
             return response;
         }
 
-        public IEnumerable<Category> GeTAllCategoriesWithProducts()
+        public async Task<IEnumerable<Category>> GeTAllCategoriesWithProductsAsync()
         {
-           return _appDbContext.categories.Include(c => c.Products).ToList();
+           return await _appDbContext.categories.Include(c => c.Products).ToListAsync();
         }
 
         public CategoryDTO GetCategory(int id)

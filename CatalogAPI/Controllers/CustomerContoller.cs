@@ -23,7 +23,7 @@ namespace CatalogAPI.Controllers
         [HttpGet("customers")]
         public IActionResult Get()
         {
-            var customers = _unitOfWork.CustomerRepository.GetAll();
+            var customers = _unitOfWork.CustomerRepository.GetAllAsync();
             var customersMapper = _mapper.Map<IEnumerable<CustomerDTO>>(customers);
             return Ok(customersMapper);
         }
@@ -31,7 +31,7 @@ namespace CatalogAPI.Controllers
         [HttpGet("customer")]
         public IActionResult GetId(int id)
         {
-            var customer = _unitOfWork.CustomerRepository.Get((c) => c.CustmoerId.Equals(id));
+            var customer = _unitOfWork.CustomerRepository.GetAsync((c) => c.CustmoerId.Equals(id));
             if (customer is null)
                 return NotFound();
 
@@ -64,9 +64,9 @@ namespace CatalogAPI.Controllers
         }
 
         [HttpDelete("customer")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> DeleteAsync(int id)
         {
-            var customer = _unitOfWork.CustomerRepository.Get((c) => c.CustmoerId.Equals(id));
+            var customer = await _unitOfWork.CustomerRepository.GetAsync((c) => c.CustmoerId.Equals(id));
 
             if (customer is null) return NotFound();
 

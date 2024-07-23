@@ -39,9 +39,9 @@ namespace CatalogAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            return Ok(_categoriesRepository.GetAllCategories(10));
+            return Ok(await _categoriesRepository.GetAllCategoriesAsync(10));
         }
 
         [HttpGet("pagination")]
@@ -86,9 +86,9 @@ namespace CatalogAPI.Controllers
 
         [HttpGet("/categories/products")]
         [ServiceFilter(typeof(ApiLoggingFilter))]
-        public IActionResult GetProducts() 
+        public async Task<IActionResult> GetProducts() 
         { 
-            return Ok(_categoriesRepository.GeTAllCategoriesWithProducts());
+            return Ok(await _categoriesRepository.GeTAllCategoriesWithProductsAsync());
         }
 
         [HttpGet("{id:int}")]
