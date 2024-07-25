@@ -1,6 +1,5 @@
-﻿namespace CatalogAPI.Pagination
+﻿namespace CatalogAPI.Pagination;
+
+public class CateroryParameters : QueryStringPagination
 {
-    public class CateroryParameters : QueryStringPagination
-    {
-    }
 }

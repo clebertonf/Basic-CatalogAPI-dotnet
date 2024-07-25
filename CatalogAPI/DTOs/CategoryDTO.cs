@@ -1,9 +1,8 @@
-﻿namespace CatalogAPI.DTOs
+﻿namespace CatalogAPI.DTOs;
+
+public class CategoryDTO
 {
-    public class CategoryDTO
-    {
-        public int CategoryId { get; set; }
-        public string? Name { get; set; }
-        public string? UrlImage { get; set; }
-    }
+    public int CategoryId { get; set; }
+    public string? Name { get; set; }
+    public string? UrlImage { get; set; }
 }
