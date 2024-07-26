@@ -2,13 +2,11 @@
 using CatalogAPI.Models;
 using CatalogAPI.Repositories.Generic;
 using CatalogAPI.Repositories.Interfaces;
+namespace CatalogAPI.Repositories;
 
-namespace CatalogAPI.Repositories
+public class CustomerRepository : Repository<Customer>, ICustomerRepository
 {
-    public class CustomerRepository : Repository<Customer>, ICustomerRepository
+    public CustomerRepository(AppDbContext appDbContext) : base(appDbContext)
     {
-        public CustomerRepository(AppDbContext appDbContext) : base(appDbContext)
-        {
-        }
     }
 }

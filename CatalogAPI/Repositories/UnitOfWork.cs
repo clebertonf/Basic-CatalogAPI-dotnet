@@ -1,35 +1,33 @@
 ﻿using CatalogAPI.Context;
 using CatalogAPI.Repositories.Interfaces;
+namespace CatalogAPI.Repositories;
 
-namespace CatalogAPI.Repositories
+public class UnitOfWork : IUnitOfWork
 {
-    public class UnitOfWork : IUnitOfWork
+    private ICustomerRepository? _customerRepository;
+
+    public AppDbContext _appDbContext;
+
+    public UnitOfWork(AppDbContext appDbContext)
     {
-        private ICustomerRepository? _customerRepository;
+        _appDbContext = appDbContext;
+    }
 
-        public AppDbContext _appDbContext;
-
-        public UnitOfWork(AppDbContext appDbContext)
+    public ICustomerRepository CustomerRepository
+    {
+        get
         {
-            _appDbContext = appDbContext;
+            return _customerRepository ?? new CustomerRepository(_appDbContext);
         }
+    }
 
-        public ICustomerRepository CustomerRepository
-        {
-            get
-            {
-                return _customerRepository ?? new CustomerRepository(_appDbContext);
-            }
-        }
+    public void Commit()
+    {
+        _appDbContext.SaveChanges();
+    }
 
-        public void Commit()
-        {
-            _appDbContext.SaveChanges();
-        }
-
-        public void Dispose() 
-        {
-            _appDbContext.Dispose();
-        }
+    public void Dispose() 
+    {
+        _appDbContext.Dispose();
     }
 }

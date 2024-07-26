@@ -1,9 +1,7 @@
 ﻿using CatalogAPI.Models;
 using CatalogAPI.Repositories.Generic;
+namespace CatalogAPI.Repositories.Interfaces;
 
-namespace CatalogAPI.Repositories.Interfaces
+public interface ICustomerRepository : IRepository<Customer>
 {
-    public interface ICustomerRepository : IRepository<Customer>
-    {
-    }
 }

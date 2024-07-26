@@ -1,8 +1,7 @@
-﻿namespace CatalogAPI.Repositories.Interfaces
+﻿namespace CatalogAPI.Repositories.Interfaces;
+
+public interface IUnitOfWork
 {
-    public interface IUnitOfWork
-    {
-        ICustomerRepository CustomerRepository { get; }
-        void Commit();
-    }
+    ICustomerRepository CustomerRepository { get; }
+    void Commit();
 }
