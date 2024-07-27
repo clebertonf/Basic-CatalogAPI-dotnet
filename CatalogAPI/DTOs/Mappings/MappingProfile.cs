@@ -1,13 +1,10 @@
 ﻿using AutoMapper;
 using CatalogAPI.Models;
-
-namespace CatalogAPI.DTOs.Mappings
+namespace CatalogAPI.DTOs.Mappings;
+public class MappingProfile : Profile
 {
-    public class MappingProfile : Profile
+    public MappingProfile() 
     {
-        public MappingProfile() 
-        {
-            CreateMap<Customer, CustomerDTO>().ReverseMap();
-        }
+        CreateMap<Customer, CustomerDTO>().ReverseMap();
     }
 }

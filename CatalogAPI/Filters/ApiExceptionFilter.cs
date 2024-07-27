@@ -1,24 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-
-namespace CatalogAPI.Filters
+namespace CatalogAPI.Filters;
+public class ApiExceptionFilter : IExceptionFilter
 {
-    public class ApiExceptionFilter : IExceptionFilter
+    private readonly ILogger<ApiExceptionFilter> _logger;
+
+    public ApiExceptionFilter(ILogger<ApiExceptionFilter> logger)
     {
-        private readonly ILogger<ApiExceptionFilter> _logger;
+        _logger = logger;
+    }
 
-        public ApiExceptionFilter(ILogger<ApiExceptionFilter> logger)
+    public void OnException(ExceptionContext context)
+    {
+        _logger.LogError(context.Exception, "An error occurred during your request!");
+        context.Result = new ObjectResult("An error occurred during your request!")
         {
-            _logger = logger;
-        }
-
-        public void OnException(ExceptionContext context)
-        {
-            _logger.LogError(context.Exception, "An error occurred during your request!");
-            context.Result = new ObjectResult("An error occurred during your request!")
-            {
-                StatusCode = StatusCodes.Status500InternalServerError
-            };
-        }
+            StatusCode = StatusCodes.Status500InternalServerError
+        };
     }
 }

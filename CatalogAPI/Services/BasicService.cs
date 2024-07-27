@@ -1,10 +1,8 @@
-﻿namespace CatalogAPI.Services
+﻿namespace CatalogAPI.Services;
+public class BasicService : IBasicService
 {
-    public class BasicService : IBasicService
+    public string GetMessage()
     {
-        public string GetMessage()
-        {
-            return $"Ola mundo! {DateTime.Now.ToString()}";
-        }
+        return $"Ola mundo! {DateTime.Now.ToString()}";
     }
 }

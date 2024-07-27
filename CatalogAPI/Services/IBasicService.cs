@@ -1,7 +1,5 @@
-﻿namespace CatalogAPI.Services
+﻿namespace CatalogAPI.Services;
+public interface IBasicService
 {
-    public interface IBasicService
-    {
-        public string GetMessage();
-    }
+    public string GetMessage();
 }
