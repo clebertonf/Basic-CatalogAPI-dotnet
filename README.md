@@ -3,3 +3,4 @@
 - DTO's
 - Extension methods
 - Filters
+- Pagination
