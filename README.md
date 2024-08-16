@@ -6,3 +6,4 @@
 - Pagination
 - Repository
 - Validation
+- Service
