@@ -1,6 +1,6 @@
 #### Repository with code examples and studies of a dotnet api. No standards, implemented architecture. The main objective is to practice the concepts studied.
 
-The concepts:
+Concepts:
 
 - EF core
 - DTO's
